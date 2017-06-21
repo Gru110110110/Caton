@@ -35,7 +35,7 @@ Caton.initialize(this);//default
 这种模式是通过监测主线程消息处理时间来判断。也就是给主线程Looper设置Printer，来计算消息处理开始前和处理后的时间间隔判断。
 </br>
 2.结构原理图</br>
-![](https://github.com/pruas/Caton/blob/master/caton_design.png)
+![](https://github.com/pruas/Caton/raw/master/caton_design.png)
 </br>
 3.测试。</br>
 我们人为在MainActivity中制造卡顿:</br>
@@ -49,6 +49,6 @@ Caton.initialize(this);//default
     }
 </pre></code>
 logcat将打印出如下图：</br>
-![](https://github.com/pruas/Caton/blob/master/caton_log.png)
+![](https://github.com/pruas/Caton/raw/master/caton_log.png)
 </br>
 4.好了，现在你自己去测试吧！
