@@ -2,6 +2,21 @@
 Caton是一个android卡顿监测模块。当UI线程卡顿（得不到执行、无反应）达到预定阈值时，将把卡顿期间线程堆栈打印出来，以便开发人员分析和优化App的性能。
 Caton由于本身有个收集线程堆栈的后台线程工作，所以会带来一定的性能消耗，这个大概在百分之2%左右。
 # Usage
+Add it to your build.gradle with:
+```gradle
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+}
+```
+and:
+
+```gradle
+dependencies {
+    compile 'com.github.pruas:Caton:v1.0'
+}
+```
 默认情况下，你在Application的onCreate方法中这样写就可以。
 <pre><code>
 Caton.initialize(this);//default
