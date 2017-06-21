@@ -33,3 +33,22 @@ Caton.initialize(this);//default
 这种模式是通过监测绘制帧间隔时间来判断是否卡顿。也就是给Choreographer设置FrameCallback的方式。这种方式只能在API 16上才能使用，否则默认使用LOOPER模式。</br>
 </br><li>Caton.MonitorMode.LOOPER</li></br>
 这种模式是通过监测主线程消息处理时间来判断。也就是给主线程Looper设置Printer，来计算消息处理开始前和处理后的时间间隔判断。
+</br>
+2.结构原理图</br>
+![](https://github.com/pruas/Caton/blob/master/caton_design.png)
+</br>
+3.测试。</br>
+我们人为在MainActivity中制造卡顿:</br>
+<pre><code>
+ public void pause(View view){
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+</pre></code>
+logcat将打印出如下图：</br>
+![](https://github.com/pruas/Caton/blob/master/caton_log.png)
+</br>
+4.好了，现在你自己去测试吧！
