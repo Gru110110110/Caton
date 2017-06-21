@@ -18,12 +18,13 @@ dependencies {
 }
 ```
 默认情况下，你在Application的onCreate方法中这样写就可以。
-<pre><code>
+```java
 Caton.initialize(this);//default
-</pre></code>
-</br >
+```
+
 你也可以使用Builder来自定义
-<pre><code>
+
+```java
  // use builder build your custom way
   Caton.Builder builder = new Caton.Builder(this)
                 .monitorMode(Caton.MonitorMode.FRAME)//默认监测模式为Caton.MonitorMode.LOOPER，这样指定Caton.MonitorMode.FRAME
@@ -40,23 +41,25 @@ Caton.initialize(this);//default
                     }
                 });
   Caton.initialize(builder);
-</pre></code>
-1. 监测模式</br>
-</br>
-监测模式有两种:</br>
-</br><li>Caton.MonitorMode.FRAME</li></br>
-这种模式是通过监测绘制帧间隔时间来判断是否卡顿。也就是给Choreographer设置FrameCallback的方式。这种方式只能在API 16上才能使用，否则默认使用LOOPER模式。</br>
-</br><li>Caton.MonitorMode.LOOPER</li></br>
+```
+
+1. 监测模式
+
+监测模式有两种:
+
+<li>Caton.MonitorMode.FRAME</li>
+这种模式是通过监测绘制帧间隔时间来判断是否卡顿。也就是给Choreographer设置FrameCallback的方式。这种方式只能在API 16上才能使用，否则默认使用LOOPER模式。
+
+<li>Caton.MonitorMode.LOOPER</li>
 这种模式是通过监测主线程消息处理时间来判断。也就是给主线程Looper设置Printer，来计算消息处理开始前和处理后的时间间隔判断。
-</br>
-</br>
-2.结构原理图</br>
+
+2.结构原理图
+
 ![](https://github.com/pruas/Caton/blob/master/caton_design.png)
-</br>
-</br>
-3.测试。</br>
-我们人为在MainActivity中制造卡顿:</br>
-<pre><code>
+
+3.测试。
+我们人为在MainActivity中制造卡顿:
+```java
  public void pause(View view){
         try {
             Thread.sleep(3000);
@@ -64,10 +67,11 @@ Caton.initialize(this);//default
             e.printStackTrace();
         }
     }
-</pre></code>
-logcat将打印出如下图：</br>
+```
+logcat将打印出如下图:
+
 ![](https://github.com/pruas/Caton/blob/master/caton_log.png)
-</br>
-</br>
+
+
 4.好了，现在你自己去测试吧！
-</br>
+
