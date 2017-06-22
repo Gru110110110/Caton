@@ -1,6 +1,6 @@
 # Caton
 Caton是一个android卡顿监测模块。当UI线程卡顿（得不到执行、无反应）达到预定阈值时，将把卡顿期间线程堆栈打印出来，以便开发人员分析和优化App的性能。
-Caton由于本身有个收集线程堆栈的后台线程工作，所以会带来一定的性能消耗，这个大概在百分之2%左右。
+Caton由于本身有个收集线程堆栈的后台线程工作，所以会带来一定的性能消耗，这个大概在百分之2%-3%左右。设置收集堆栈时间越小，消耗越大。触发卡顿时间范围是500ms\~4000ms,默认为3000ms;收集时间间隔范围为500ms\~2000ms，默认为1000ms。注意：自定义时，不要把收集时间间隔设置大于触发卡顿时间间隔。
 # Usage
 Add it to your build.gradle with:
 ```gradle
@@ -14,12 +14,12 @@ and:
 
 ```gradle
 dependencies {
-    compile 'com.github.pruas:Caton:v1.0'
+    compile 'com.github.pruas:Caton:v1.0.1'
 }
 ```
 默认情况下，你在Application的onCreate方法中这样写就可以。
 ```java
-Caton.initialize(this);//default
+  Caton.initialize(this);//default
 ```
 
 你也可以使用Builder来自定义
@@ -43,7 +43,7 @@ Caton.initialize(this);//default
   Caton.initialize(builder);
 ```
 
-1. 监测模式
+1、监测模式
 
 监测模式有两种:
 
@@ -53,11 +53,12 @@ Caton.initialize(this);//default
 <li>Caton.MonitorMode.LOOPER</li>
 这种模式是通过监测主线程消息处理时间来判断。也就是给主线程Looper设置Printer，来计算消息处理开始前和处理后的时间间隔判断。
 
-2.结构原理图
+2、结构原理图
 
 ![](https://github.com/pruas/Caton/blob/master/caton_design.png)
 
-3.测试。
+3、测试。
+
 我们人为在MainActivity中制造卡顿:
 ```java
  public void pause(View view){
@@ -73,5 +74,5 @@ logcat将打印出如下图:
 ![](https://github.com/pruas/Caton/blob/master/caton_log.png)
 
 
-4.好了，现在你自己去测试吧！
+4、好了，是时候去测试一把了！
 
