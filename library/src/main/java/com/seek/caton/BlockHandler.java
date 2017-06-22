@@ -5,6 +5,8 @@ import android.content.Context;
 
 import java.util.List;
 
+import static com.seek.caton.Config.log;
+
 /**
  * Created by seek on 2017/6/20.
  */
@@ -46,7 +48,7 @@ public class BlockHandler {
                             .append(info.shortMsg)
                             .append("\n")
                             .append(info.longMsg);
-                    Config.log(TAG, anrInfo.toString());
+                    log(TAG, anrInfo.toString());
                     return anrInfo.toString();
                 }
             }
@@ -56,7 +58,7 @@ public class BlockHandler {
 
     private void printStackTrace(String[] stackTraces) {
         for (String item : stackTraces) {
-            Config.log(TAG, item);
+            log(TAG, item);
         }
     }
 }

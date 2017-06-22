@@ -13,6 +13,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 //        Caton.initialize(this);//default
+//        Caton.setLoggingEnabled(false);//close log
         // use builder build your custom way
         Caton.Builder builder = new Caton.Builder(this)
                 .monitorMode(Caton.MonitorMode.FRAME)//默认监测模式为Caton.MonitorMode.LOOPER，这样指定Caton.MonitorMode.FRAME

@@ -7,6 +7,8 @@ import android.view.Choreographer;
 import android.view.Display;
 import android.view.WindowManager;
 
+import static com.seek.caton.Config.log;
+
 /**
  * Created by seek on 2017/6/20.
  */
@@ -22,10 +24,10 @@ public class FPSFrameCallBack implements Choreographer.FrameCallback {
 
     public FPSFrameCallBack(Context context, BlockHandler blockHandler) {
         float mRefreshRate = getRefreshRate(context);
-        mFrameIntervalNanos = (long) (1000000000 / mRefreshRate);
+        mFrameIntervalNanos = (long) (1000000000l / mRefreshRate);
         SKIPPED_FRAME_WARNING_LIMIT = Config.THRESHOLD_TIME * 1000l * 1000l / mFrameIntervalNanos;
         SKIPPED_FRAME_ANR_TRIGGER = 5000000000l / mFrameIntervalNanos;
-        Config.log(TAG,"SKIPPED_FRAME_WARNING_LIMIT : " +SKIPPED_FRAME_WARNING_LIMIT+" ,SKIPPED_FRAME_ANR_TRIGGER : " + SKIPPED_FRAME_ANR_TRIGGER);
+        log(TAG, "SKIPPED_FRAME_WARNING_LIMIT : " + SKIPPED_FRAME_WARNING_LIMIT + " ,SKIPPED_FRAME_ANR_TRIGGER : " + SKIPPED_FRAME_ANR_TRIGGER);
         mBlockHandler = blockHandler;
     }
 
@@ -45,9 +47,9 @@ public class FPSFrameCallBack implements Choreographer.FrameCallback {
         if (jitterNanos >= mFrameIntervalNanos) {
             final long skippedFrames = jitterNanos / mFrameIntervalNanos;
             if (skippedFrames >= SKIPPED_FRAME_WARNING_LIMIT) {
-                Config.log(TAG, "Skipped " + skippedFrames + " frames!  "
+                log(TAG, "Skipped " + skippedFrames + " frames!  "
                         + "The application may be doing too much work on its main thread.");
-                mBlockHandler.notifyBlockOccurs(skippedFrames >= SKIPPED_FRAME_ANR_TRIGGER,skippedFrames);
+                mBlockHandler.notifyBlockOccurs(skippedFrames >= SKIPPED_FRAME_ANR_TRIGGER, skippedFrames);
             }
         }
         mLastFrameTimeNanos = frameTimeNanos;

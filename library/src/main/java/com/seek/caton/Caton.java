@@ -10,28 +10,29 @@ import android.view.Choreographer;
 
 public class Caton {
     private static Caton sCaton;
-    private UILooperObserver mLooperObserver;
     final static long DEFAULT_THRESHOLD_TIME = 3000;
     final static long DEFAULT_COLLECT_INTERVAL = 1000;
     final static long MIN_THRESHOLD_TIME = 500;
     final static long MIN_COLLECT_INTERVAL = 500;
+    final static long MAX_THRESHOLD_TIME = 4000;
+    final static long MAX_COLLECT_INTERVAL = 2000;
     static MonitorMode DEFAULT_MODE = MonitorMode.LOOPER;
 
-    private Caton(Context context, long thresholdTime, long collectInterval, MonitorMode mode, boolean loggingEnabled, Callback callback) {
-        long mThresholdTime = thresholdTime < MIN_THRESHOLD_TIME ? MIN_THRESHOLD_TIME : thresholdTime;
-        long mCollectInterval = collectInterval < MIN_COLLECT_INTERVAL ? MIN_COLLECT_INTERVAL : collectInterval;
+    private Caton(Context context, long thresholdTimeMillis, long collectIntervalMillis, MonitorMode mode, boolean loggingEnabled, Callback callback) {
+        long thresholdTime = Math.min(Math.max(thresholdTimeMillis, MIN_THRESHOLD_TIME), MAX_THRESHOLD_TIME);
+        long collectInterval = Math.min(Math.max(collectIntervalMillis, MIN_COLLECT_INTERVAL), MAX_COLLECT_INTERVAL);
         Config.LOG_ENABLED = loggingEnabled;
-        Config.THRESHOLD_TIME = mThresholdTime;
-        Collector mTraceCollector = new StackTraceCollector(mCollectInterval);
+        Config.THRESHOLD_TIME = thresholdTime;
+        Collector mTraceCollector = new StackTraceCollector(collectInterval);
         BlockHandler mBlockHandler = new BlockHandler(context, mTraceCollector, callback);
         if (mode == MonitorMode.LOOPER) {
-            mLooperObserver = new UILooperObserver(mBlockHandler);
+            new UILooperObserver(mBlockHandler);
         } else if (mode == MonitorMode.FRAME) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 FPSFrameCallBack fpsFrameCallBack = new FPSFrameCallBack(context, mBlockHandler);
                 Choreographer.getInstance().postFrameCallback(fpsFrameCallBack);
             } else {
-                mLooperObserver = new UILooperObserver(mBlockHandler);
+                new UILooperObserver(mBlockHandler);
             }
         }
     }
@@ -50,13 +51,17 @@ public class Caton {
         }
     }
 
+    public static void setLoggingEnabled(boolean enabled) {
+        Config.LOG_ENABLED = enabled;
+    }
+
 
     public static class Builder {
         private long mThresholdTime = DEFAULT_THRESHOLD_TIME;
         private long mCollectInterval = DEFAULT_COLLECT_INTERVAL;
         private Context mContext;
         private MonitorMode mMonitorMode = DEFAULT_MODE;
-        private boolean loggingEnabled = false;
+        private boolean loggingEnabled = true;
         private Callback mCallback;
 
         public Builder(Context context) {
@@ -95,10 +100,10 @@ public class Caton {
 
     public enum MonitorMode {
         LOOPER(0), FRAME(1);
-        int mode;
+        int value;
 
         MonitorMode(int mode) {
-            this.mode = mode;
+            this.value = mode;
         }
     }
 

@@ -4,6 +4,8 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.util.Printer;
 
+import static com.seek.caton.Config.log;
+
 /**
  * Created by seek on 2017/6/19.
  */
@@ -32,8 +34,8 @@ public class UILooperObserver implements Printer {
                 long messageElapseTime = SystemClock.elapsedRealtime() - mPreMessageTime;
                 long threadElapseTime = SystemClock.currentThreadTimeMillis() - mPreThreadTime;
                 if (messageElapseTime > Config.THRESHOLD_TIME) {
-                    Config.log(TAG, String.format("messageElapseTime : %s, threadElapseTime : %s", messageElapseTime, threadElapseTime));
-                    mBlockHandler.notifyBlockOccurs(messageElapseTime >= ANR_TRIGGER_TIME,messageElapseTime,threadElapseTime);
+                    log(TAG, String.format("messageElapseTime : %s, threadElapseTime : %s", messageElapseTime, threadElapseTime));
+                    mBlockHandler.notifyBlockOccurs(messageElapseTime >= ANR_TRIGGER_TIME, messageElapseTime, threadElapseTime);
                 }
             }
         }

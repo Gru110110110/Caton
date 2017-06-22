@@ -17,12 +17,12 @@ public class StackTraceCollector implements Collector {
     private final static String TAG = "StackTraceCollector";
     private final static String THREAD_TAG = "------";
     private final static int COLLECT_MSG = 0x0037;
-    private final static int mCollectSpaceTime = 5000;
+    private final static int COLLECT_SPACE_TIME = 5000;
     private final static int MIN_COLLECT_COUNT = 5;
     private long mCollectInterval;
     private volatile Looper mLooper;
     private volatile CollectorHandler mCollectorHandler;
-    private ArrayDeque<String> stackQueue;
+    private ArrayDeque<String> mStackQueue;
     private int mLimitLength;
 
     public StackTraceCollector(long collectInterval) {
@@ -32,9 +32,9 @@ public class StackTraceCollector implements Collector {
         thread.start();
         mLooper = thread.getLooper();
         mCollectorHandler = new CollectorHandler(mLooper);
-        int space = (int) (mCollectSpaceTime / mCollectInterval);
+        int space = (int) (COLLECT_SPACE_TIME / mCollectInterval);
         mLimitLength = space <= MIN_COLLECT_COUNT ? MIN_COLLECT_COUNT : space;
-        stackQueue = new ArrayDeque<>(mLimitLength);
+        mStackQueue = new ArrayDeque<>(mLimitLength);
         trigger();
     }
 
@@ -47,15 +47,15 @@ public class StackTraceCollector implements Collector {
 
     @Override
     public String[] getStackTraceInfo() {
-        return stackQueue.toArray(new String[0]);
+        return mStackQueue.toArray(new String[0]);
     }
 
     @Override
     public void add(String stackTrace) {
-        if (stackQueue.size() >= mLimitLength) {
-            stackQueue.poll();
+        if (mStackQueue.size() >= mLimitLength) {
+            mStackQueue.poll();
         }
-        stackQueue.offer(stackTrace);
+        mStackQueue.offer(stackTrace);
     }
 
 
@@ -78,7 +78,7 @@ public class StackTraceCollector implements Collector {
     private String getAllStackInfo() {
         Thread main = Looper.getMainLooper().getThread();
         Map<Thread, StackTraceElement[]> allLiveThreadStackMap = main.getAllStackTraces();
-        StringBuilder stackBuilder = new StringBuilder(256);
+        StringBuilder stackBuilder = new StringBuilder(128);
         for (Thread item : allLiveThreadStackMap.keySet()) {
             StackTraceElement[] stackTraceElements = item.getStackTrace();
             if (stackTraceElements != null && stackTraceElements.length > 0) {
